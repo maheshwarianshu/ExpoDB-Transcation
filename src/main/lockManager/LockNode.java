@@ -5,7 +5,6 @@ import java.util.Queue;
 import java.util.concurrent.locks.*;
 
 import main.Key;
-import main.transaction.Transaction;
 
 public class LockNode {
     private Key key;

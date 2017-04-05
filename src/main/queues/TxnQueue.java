@@ -1,8 +1,10 @@
 package main.queues;
 
+import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-import main.transaction.Transaction;
+import main.transaction_YCSB.Transaction;
 
 public class TxnQueue{
 
@@ -10,12 +12,28 @@ public class TxnQueue{
 	  Queue<Transaction> twoPCTxnqueue;
 	  Queue<Transaction> twoPLTxnqueue;
 
-	  Transaction dequeue()
+	  public TxnQueue(){
+          multiParitionTxnqueue = new LinkedList<>();
+          twoPCTxnqueue = new LinkedList<>();
+          twoPLTxnqueue = new LinkedList<>();
+      }
+
+	  public Transaction dequeueMultiPartition()
 	  { 
 		  return null;
 	  }
+
+    public Transaction dequeue2PC()
+    {
+        return null;
+    }
+
+    public Transaction dequeue2PL()
+    {
+        return null;
+    }
 	  
-	  void enqueue(Transaction txn)
+    public void enqueue(Transaction txn)
 	  {
 		  return;
 	  }
