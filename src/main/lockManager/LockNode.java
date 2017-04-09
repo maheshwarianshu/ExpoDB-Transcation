@@ -8,7 +8,7 @@ import main.Key;
 
 public class LockNode {
     private Key key;
-    private ReadWriteLock txnLock;
+    //private ReadWriteLock txnLock;
     private Lock keyNodeLock;
 	private Queue<TxnWaitQueueNode> waitTxnQueue;
 	
@@ -16,7 +16,7 @@ public class LockNode {
     {
     	//TODO: check which lock to use
     	keyNodeLock = new ReentrantLock(); 
-    	txnLock = new ReentrantReadWriteLock();
+    	//txnLock = new ReentrantReadWriteLock();
     	this.key = key;
     	waitTxnQueue = new LinkedList<>();
     }

@@ -1,11 +1,12 @@
 package main.message;
 
+import main.transaction_YCSB.Request;
 import main.transaction_YCSB.Transaction;
 
 public class MultiPartitionMessage  extends Message {
-    private Transaction txn;
+    private Request request;
 
-    public Transaction getTxn() {
-        return txn;
+    public Request getRequest() {
+        return request;
     }
 }

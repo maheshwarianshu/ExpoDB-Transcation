@@ -9,16 +9,20 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class MsgQueue {
 
+    Long txnIDgenerator;
+    String workerId;
     Queue<Message> multiParitionMsgqueue;
     Queue<Message> twoPCMsgqueue;
     Queue<Message> twoPLMsgqueue;
     Queue<Message> newTxnQueue;
 
-  public MsgQueue(Queue<Message> newTxnQueue){
+  public MsgQueue(Queue<Message> newTxnQueue, String workerId){
       this.multiParitionMsgqueue = new ConcurrentLinkedQueue<>();
       this.twoPCMsgqueue = new ConcurrentLinkedQueue<>();
       this.twoPLMsgqueue = new ConcurrentLinkedQueue<>();
       this.newTxnQueue = newTxnQueue;
+      this.txnIDgenerator = 0L;
+      this.workerId = workerId;
   }
 
   public Message dequeue()  {
@@ -47,7 +51,9 @@ public class MsgQueue {
   }
 
   public void enqueue(Message msg) {
-      if(msg.getDestThreadId()==-1){
+      if(msg.getTxnThreadId()==-1){ // new transaction
+          txnIDgenerator+=1;
+          msg.setTxnID(workerId + "_t" + txnIDgenerator);
           insertIntoQueue(newTxnQueue, msg);
       }
       else{

@@ -1,22 +1,24 @@
 package main;
 
+import com.expodb.Config;
 import main.message.Message;
-import main.message.MultiPartitionMessage;
-import main.message.NewTxnMessage;
 import main.queues.MsgQueue;
-import main.queues.TxnQueue;
 import main.transaction_YCSB.Transaction;
+import main.transaction_YCSB.TxnFragment;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.lang.Thread.sleep;
 
 public class TxnManager implements Runnable{
 
     MsgQueue msgQueue;
-    TxnQueue txnQueue;
+    Map<String,Transaction> transactionMap;
 
     public TxnManager(MsgQueue msgQueue){
         this.msgQueue = msgQueue;
-        this.txnQueue = new TxnQueue();
+        this.transactionMap = new HashMap<>();
     }
 
     @Override
@@ -33,18 +35,18 @@ public class TxnManager implements Runnable{
                 }
             }
             //TODO: execution phase: extract txn from message, send parallel units, execute
-            int txnID = msg.getTxnID();
+            String txnID = msg.getTxnID();
             Transaction txn;
             switch(msg.getType()){
                 case NEWTXN:
-                    txn = ((NewTxnMessage)msg).getTxn();
+                    txn = new Transaction();
                     break;
                 case MULTIPARTITION:
-                    txn = ((MultiPartitionMessage)msg).getTxn();
                     break;
                 case TWOPC:
-                    txnID = msg.getTxnID();
-
+                    break;
+                case TWOPL:
+                    break;
             }
         }
     }
