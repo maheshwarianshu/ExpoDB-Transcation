@@ -2,13 +2,15 @@ package main;
 
 public class Key {
 
-	private Integer key;
+    // TODO: implementation issues - format requirement from storage and evaluaiton layer
+	private String key;
 
-	public Integer getKey() {
+	public String getKey() {
 		return key;
 	}
 
-	public void setKey(Integer key) {
+	public void setKey(String key) {
 		this.key = key;
 	}
+
 }

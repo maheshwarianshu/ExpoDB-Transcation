@@ -12,9 +12,12 @@ public class Config {
 
   public enum OperationType { READ,WRITE,SCAN};
 
+  public enum LLockType{READ, WRITE, FREE};
+
   public static final Integer NUMTXNTHREADS = 5;
 
   public static final Integer NUMMSGQTHREADS = 5;
+
   
 }
   

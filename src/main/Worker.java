@@ -23,31 +23,28 @@ public class Worker{
         String port;
     }
 
-	private String workerId;
-    private GlobalPartitionInfo globalPartitionInfo;
+    private static String workerId;
+    private static GlobalPartitionInfo globalPartitionInfo;
     private List<TxnManager> txnManagerList;
-    private List<MsgQueue> msgQueueList;
+    private static List<MsgQueue> msgQueueList;
     private Queue<Message> newTransactionQueue;
-    private LockManager lockManager;
-    private Map<String,NetworkAddress> workerNetworkAddressMapping;
+    private static LockManager lockManager;
+    private static Map<String,NetworkAddress> workerNetworkAddressMapping;
     private DatagramSocket receiveSocket = null;
+    private List<Key> dataKeys;
     private static AtomicLong globalTxnTimestamp = new AtomicLong(0L);
 
 	public Worker(String id)
 	{
-        this.workerId = id;
-        this.globalPartitionInfo = new GlobalPartitionInfo();
-        this.lockManager = new LockManager();
-        this.newTransactionQueue = new ConcurrentLinkedQueue();
-        this.workerNetworkAddressMapping = new HashMap<>();
+        workerId = id;
+        globalPartitionInfo = new GlobalPartitionInfo();
 
-        this.msgQueueList = new ArrayList<>();
-        for(int i=0; i<NUMTXNTHREADS; i++){
-            MsgQueue msgQueue =new MsgQueue(newTransactionQueue, workerId);
-            this.msgQueueList.add(msgQueue);
-            TxnManager txnManager = new TxnManager(msgQueue);
-            this.txnManagerList.add(txnManager);
-        }
+        initializeDataKeys();
+        lockManager = new LockManager(dataKeys);
+
+        newTransactionQueue = new ConcurrentLinkedQueue<>();
+        workerNetworkAddressMapping = new HashMap<>();
+        initializeMsgQueues();
 
         for(TxnManager t : txnManagerList){
             Thread thread = new Thread(t);
@@ -62,6 +59,21 @@ public class Worker{
             e.printStackTrace();
         }
 	}
+
+	private void initializeDataKeys(){
+        //TODO: Get RIDs/Keys from storage layer
+        //TODO: give keyIDs for ordering the keys
+    }
+
+	private void initializeMsgQueues(){
+        msgQueueList = new ArrayList<>();
+        for(int i=0; i<NUMTXNTHREADS; i++){
+            MsgQueue msgQueue =new MsgQueue(newTransactionQueue, workerId);
+            msgQueueList.add(msgQueue);
+            TxnManager txnManager = new TxnManager(msgQueue, i);
+            txnManagerList.add(txnManager);
+        }
+    }
 
 	public ObjectInputStream recieve()
 	{
@@ -105,7 +117,79 @@ public class Worker{
         }
 	}
 
-	public static Long getTimeStamp(){
+    public static LockManager getLockManager() {
+        return lockManager;
+    }
+
+    public static void setLockManager(LockManager lockManager) {
+        Worker.lockManager = lockManager;
+    }
+
+    public static Long getTimeStamp(){
         return globalTxnTimestamp.incrementAndGet();
+    }
+
+    public static String getWorkerId(){
+        return workerId;
+    }
+
+    public static void setWorkerId(String workerId) {
+        Worker.workerId = workerId;
+    }
+
+    public static GlobalPartitionInfo getGlobalPartitionInfo() {
+        return globalPartitionInfo;
+    }
+
+    public static void setGlobalPartitionInfo(GlobalPartitionInfo globalPartitionInfo) {
+        Worker.globalPartitionInfo = globalPartitionInfo;
+    }
+
+    public List<TxnManager> getTxnManagerList() {
+        return txnManagerList;
+    }
+
+    public void setTxnManagerList(List<TxnManager> txnManagerList) {
+        this.txnManagerList = txnManagerList;
+    }
+
+    public static List<MsgQueue> getMsgQueueList() {
+        return msgQueueList;
+    }
+
+    public static void setMsgQueueList(List<MsgQueue> msgQueueList) {
+        Worker.msgQueueList = msgQueueList;
+    }
+
+    public Queue<Message> getNewTransactionQueue() {
+        return newTransactionQueue;
+    }
+
+    public void setNewTransactionQueue(Queue<Message> newTransactionQueue) {
+        this.newTransactionQueue = newTransactionQueue;
+    }
+
+    public static Map<String, NetworkAddress> getWorkerNetworkAddressMapping() {
+        return workerNetworkAddressMapping;
+    }
+
+    public static void setWorkerNetworkAddressMapping(Map<String, NetworkAddress> workerNetworkAddressMapping) {
+        Worker.workerNetworkAddressMapping = workerNetworkAddressMapping;
+    }
+
+    public DatagramSocket getReceiveSocket() {
+        return receiveSocket;
+    }
+
+    public void setReceiveSocket(DatagramSocket receiveSocket) {
+        this.receiveSocket = receiveSocket;
+    }
+
+    public static AtomicLong getGlobalTxnTimestamp() {
+        return globalTxnTimestamp;
+    }
+
+    public static void setGlobalTxnTimestamp(AtomicLong globalTxnTimestamp) {
+        Worker.globalTxnTimestamp = globalTxnTimestamp;
     }
 }

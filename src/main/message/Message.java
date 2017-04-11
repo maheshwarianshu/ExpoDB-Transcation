@@ -13,10 +13,10 @@ public class Message implements Serializable{
     private String txnID; //default NULL
     private Integer coordinatorID;
 
-    /*private String receiverIP;
+    private String receiverIP;
     private String receiverPort;
     private String senderIp;
-    private String senderPort;*/
+    private String senderPort;
 
     public Message(){}
 
@@ -59,4 +59,35 @@ public class Message implements Serializable{
         return txnID;
     }
 
+    public String getReceiverIP() {
+        return receiverIP;
+    }
+
+    public void setReceiverIP(String receiverIP) {
+        this.receiverIP = receiverIP;
+    }
+
+    public String getReceiverPort() {
+        return receiverPort;
+    }
+
+    public void setReceiverPort(String receiverPort) {
+        this.receiverPort = receiverPort;
+    }
+
+    public String getSenderIp() {
+        return senderIp;
+    }
+
+    public void setSenderIp(String senderIp) {
+        this.senderIp = senderIp;
+    }
+
+    public String getSenderPort() {
+        return senderPort;
+    }
+
+    public void setSenderPort(String senderPort) {
+        this.senderPort = senderPort;
+    }
 }

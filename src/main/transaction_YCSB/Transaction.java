@@ -15,21 +15,34 @@ public class Transaction {
 	private Integer coordinatorID;
 	private List<TxnFragment> txnFragments;
 	private Map<Integer,Integer> workerToACKMap;
-	private String clientPort;
-	private String clientIp;
+	private String replyBackPort;
+	private String replyBackIp;
+	private boolean hasLocks;
 
 	public Transaction(String txnID, Long txnTimeStamp, Integer threadId, TxnStatus status,
-					   TxnType type, Integer coordID, List<TxnFragment> txnFragments,
-					   String clientPort, String clientIp){
+					   Integer coordID, List<TxnFragment> txnFragments,
+					   String replyBackPort, String replyBackIp){ //TxnType type - add if needed, take as input from message
 		this.txnID = txnID;
 		this.txnTimeStamp = txnTimeStamp;
 		this.threadId = threadId;
 		this.status = status;
-		this.type = type;
 		this.coordinatorID = coordID;
 		this.txnFragments = txnFragments;
-		this.clientPort = clientPort;
-		this.clientIp = clientIp;
+		this.replyBackPort = replyBackPort;
+		this.replyBackIp = replyBackIp;
+		this.hasLocks = false;
+	}
+
+	public void execute(){
+		if(txnFragments.size()==1){
+			type = TxnType.SINGLEPARTITION;
+		}
+		else{
+			type = TxnType.MULTIPARTITION;
+		}
+		for(TxnFragment fragment : txnFragments){
+			fragment.execute(this);
+		}
 	}
 
 	public Long getTxnTimeStamp(){
@@ -96,19 +109,27 @@ public class Transaction {
 		this.workerToACKMap = workerToACKMap;
 	}
 
-	public String getClientPort() {
-		return clientPort;
+	public String getreplyBackPort() {
+		return replyBackPort;
 	}
 
-	public void setClientPort(String clientPort) {
-		this.clientPort = clientPort;
+	public void setreplyBackPort(String replyBackPort) {
+		this.replyBackPort = replyBackPort;
 	}
 
-	public String getClientIp() {
-		return clientIp;
+	public String getreplyBackIp() {
+		return replyBackIp;
 	}
 
-	public void setClientIp(String clientIp) {
-		this.clientIp = clientIp;
+	public void setreplyBackIp(String replyBackIp) {
+		this.replyBackIp = replyBackIp;
+	}
+
+	public boolean isHasLocks() {
+		return hasLocks;
+	}
+
+	public void setHasLocks(boolean hasLocks) {
+		this.hasLocks = hasLocks;
 	}
 }

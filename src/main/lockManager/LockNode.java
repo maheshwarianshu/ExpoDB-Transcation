@@ -1,54 +1,57 @@
 package main.lockManager;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.locks.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
+import com.expodb.Config;
 import main.Key;
+import main.transaction_YCSB.Transaction;
 
 public class LockNode {
     private Key key;
-    //private ReadWriteLock txnLock;
-    private Lock keyNodeLock;
+    private Lock spinlock;
+    private Config.LLockType keyNodeLock; //Read,Write,Free
+	private String accessTimeStamp;
 	private Queue<TxnWaitQueueNode> waitTxnQueue;
 	
-    public LockNode(Key key)
-    {
-    	//TODO: check which lock to use
-    	keyNodeLock = new ReentrantLock(); 
-    	//txnLock = new ReentrantReadWriteLock();
-    	this.key = key;
-    	waitTxnQueue = new LinkedList<>();
+    public LockNode(Key key) {
+        this.key = key;
+        spinlock = new ReentrantLock();
+        keyNodeLock = Config.LLockType.FREE;
+        accessTimeStamp = null;
+        waitTxnQueue = new LinkedList<>();
     }
-    
-    public Lock acquireKeyNodeLock() {
-    	keyNodeLock.lock();
-		return keyNodeLock;
-	}
-	
-    public void releaseKeyNodeLock() {
-		 keyNodeLock.unlock();
-	}
 
-	public Key getKey() {
-		return key;
-	}
+    public void enqueue(Transaction txn, List<LockRequest> readWriteSet){
+        TxnWaitQueueNode txnWaitQueueNode = new TxnWaitQueueNode(txn.getTxnID(), txn.getThreadId(),
+                                                    txn.getTxnTimeStamp(), readWriteSet);
+        // TODO: spin lock to add to queue
+    }
 
-//	public int acquireTxnReadLock() {
-//		 txnLock.readLock().lock();
-//		 return 0;
-//	}
-//	
-//	public int acquireTxnWriteLock() {
-//		 txnLock.writeLock().lock();
-//		 return 0;
-//	}
+    public String getAccessTimeStamp() {
+        return accessTimeStamp;
+    }
 
-//	public void releaseTxnReadLock() {
-//		txnLock.readLock().unlock();
-//	}
-//
-//	public void releaseTxnWriteLock() {
-//		txnLock.writeLock().unlock();
-//	}
+    public void setAccessTimeStamp(String accessTimeStamp) {
+        this.accessTimeStamp = accessTimeStamp;
+    }
+
+    public Config.LLockType getKeyNodeLock() {
+        return keyNodeLock;
+    }
+
+    public void setKeyNodeLock(Config.LLockType keyNodeLock) {
+        this.keyNodeLock = keyNodeLock;
+    }
+
+    public Queue<TxnWaitQueueNode> getWaitTxnQueue() {
+        return waitTxnQueue;
+    }
+
+    public void setWaitTxnQueue(Queue<TxnWaitQueueNode> waitTxnQueue) {
+        this.waitTxnQueue = waitTxnQueue;
+    }
 }
