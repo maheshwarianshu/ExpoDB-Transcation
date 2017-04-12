@@ -14,7 +14,7 @@ import main.lockManager.LockManager;
 import main.message.Message;
 import main.queues.MsgQueue;
 
-import static com.expodb.Config.NUMTXNTHREADS;
+import static expodb.util.Config.NUMTXNTHREADS;
 
 public class Worker{
 

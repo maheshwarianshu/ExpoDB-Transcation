@@ -1,6 +1,5 @@
 package main.queues;
 
-import com.expodb.Config.*;
 import main.message.*;
 
 import java.util.Queue;

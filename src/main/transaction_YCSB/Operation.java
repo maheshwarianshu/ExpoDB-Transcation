@@ -1,6 +1,6 @@
 package main.transaction_YCSB;
 
-import com.expodb.Config.*;
+import expodb.util.Config.*;
 import main.Worker;
 
 public class Operation { // YCSB request

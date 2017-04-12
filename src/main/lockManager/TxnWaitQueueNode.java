@@ -1,12 +1,6 @@
 package main.lockManager;
 
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-
-import com.expodb.Config;
-import main.transaction_YCSB.Transaction;
-
-import main.Key;
 
 public class TxnWaitQueueNode {
     String txnId;

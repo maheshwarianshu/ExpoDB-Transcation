@@ -1,6 +1,6 @@
 package main;
 
-import com.expodb.Config;
+import expodb.util.Config;
 import main.message.Message;
 import main.message.NewTxnMessage;
 import main.queues.MsgQueue;

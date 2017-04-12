@@ -6,7 +6,7 @@ import java.util.Queue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.expodb.Config;
+import expodb.util.Config;
 import main.Key;
 import main.transaction_YCSB.Transaction;
 

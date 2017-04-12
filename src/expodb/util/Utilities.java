@@ -1,4 +1,4 @@
-package com.expodb;
+package expodb.util;
 
 import main.message.Message;
 

@@ -3,7 +3,7 @@ package main.transaction_YCSB;
 import java.util.List;
 import java.util.Map;
 
-import com.expodb.Config.*;
+import expodb.util.Config.*;
 
 public class Transaction {
 

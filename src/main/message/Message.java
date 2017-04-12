@@ -1,8 +1,6 @@
 package main.message;
 
-import com.expodb.Config.MsgType;
-
-import main.transaction_YCSB.Transaction;
+import expodb.util.Config.MsgType;
 
 import java.io.Serializable;
 
